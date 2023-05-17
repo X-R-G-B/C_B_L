@@ -18,6 +18,8 @@
        77 CURRENT-WORD PIC X(30).
        77 NB-WORDS PIC 9(3).
 
+       01 WORD-INDEX PIC 9(3).
+
        SCREEN SECTION.
        01 SHOW-WORD.
            02 LINE 1 COL 1 VALUE "Mot: ".
@@ -26,10 +28,18 @@
        01 SHOW-NB-WORD.
            02 LINE 2 COL 1 VALUE "Nombre de mot: ".
            02 LINE 2 COL 17 PIC 9(3) FROM NB-WORDS.
+       
+       01 SHOW-INDEX-WORD.
+           02 LINE 3 COL 1 VALUE "Index: ".
+           02 LINE 3 COL 8 PIC 9(3) FROM WORD-INDEX.
 
        PROCEDURE DIVISION.
        PERFORM COUNT-WORD.
        DISPLAY SHOW-NB-WORD.
+       PERFORM GET-RANDOM-INDEX.
+       DISPLAY SHOW-INDEX-WORD.
+       PERFORM GET-RANDOM-WORD.
+       DISPLAY SHOW-WORD.
        STOP RUN.
 
        COUNT-WORD.
@@ -44,5 +54,23 @@
 
        READ-WORD.
            READ FILE-WORDS
-               AT END SET END-OF-FILE TO TRUE
+             AT END SET END-OF-FILE TO TRUE
            END-READ.
+           MOVE MOT TO CURRENT-WORD.
+
+       GET-RANDOM-WORD.
+           PERFORM GET-RANDOM-INDEX.
+           OPEN INPUT FILE-WORDS
+           PERFORM UNTIL WORD-INDEX = 0
+               PERFORM READ-WORD
+               COMPUTE WORD-INDEX = WORD-INDEX - 1
+           END-PERFORM.
+           CLOSE FILE-WORDS.
+
+       GET-RANDOM-INDEX.
+           COMPUTE WORD-INDEX =
+               FUNCTION RANDOM(FUNCTION NUMVAL(FUNCTION
+               CURRENT-DATE(9:6)) * 100) * 1000
+           DIVIDE WORD-INDEX BY NB-WORDS GIVING WORD-INDEX
+           REMAINDER WORD-INDEX.
+           ADD 1 TO WORD-INDEX.
