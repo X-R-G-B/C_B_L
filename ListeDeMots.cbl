@@ -4,8 +4,9 @@
        ENVIRONMENT DIVISION.
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
-           SELECT MONFICHIER ASSIGN TO 'assets/word_list.txt'.
-       
+           SELECT MONFICHIER ASSIGN TO 'assets/word_list.txt'
+               ORGANIZATION IS LINE SEQUENTIAL.
+ 
        DATA DIVISION.
        FILE SECTION.
        FD MONFICHIER.
