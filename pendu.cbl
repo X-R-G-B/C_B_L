@@ -1,6 +1,6 @@
        IDENTIFICATION DIVISION.
        PROGRAM-ID. pendu.
- 
+
        ENVIRONMENT DIVISION.
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
@@ -15,33 +15,52 @@
            05 MOT PIC X(30).
 
        WORKING-STORAGE SECTION.
-       77 CURRENT-WORD PIC X(30).
+       77 CURR-WORD PIC X(30).
+       77 WORD-RES PIC X(30).
        77 NB-WORDS PIC 9(3).
+       77 WORD-INDEX PIC 9(3).
+       77 IS-WON PIC X(1).
+       77 INPUT-VALUE PIC a(1).
+       01 I PIC 9 VALUE 1.
 
-       01 WORD-INDEX PIC 9(3).
 
        SCREEN SECTION.
        01 SHOW-WORD.
            02 LINE 1 COL 1 VALUE "Mot: ".
-           02 LINE 1 COL 6 PIC X(30) FROM CURRENT-WORD.
+           02 LINE 1 COL 6 PIC X(30) FROM CURR-WORD.
 
        01 SHOW-NB-WORD.
            02 LINE 2 COL 1 VALUE "Nombre de mot: ".
            02 LINE 2 COL 17 PIC 9(3) FROM NB-WORDS.
-       
+
        01 SHOW-INDEX-WORD.
            02 LINE 3 COL 1 VALUE "Index: ".
            02 LINE 3 COL 8 PIC 9(3) FROM WORD-INDEX.
 
+       01 ASK-LETTER-OR-WORD.
+           02 LINE 10 COL 1 VALUE "Entrez un mot: ".
+           02 INPUT-ENTERED PIC a(1) TO INPUT-VALUE REQUIRED.
+
+       01 SHOW-RES-WORD.
+           02 BLANK SCREEN.
+           02 LINE 5 COL 1 VALUE "Mot: ".
+           02 LINE 5 COL 6 PIC X(30) FROM WORD-RES.
+       01 SHOW-CHAR-ENTERED.
+           02 LINE 6 COL 1 VALUE "Lettre: ".
+           02 LINE 6 COL 9 PIC a(1) FROM INPUT-VALUE.
+
        PROCEDURE DIVISION.
+       MOVE "N" TO IS-WON.
        PERFORM COUNT-WORD.
        DISPLAY SHOW-NB-WORD.
        IF NB-WORDS = 0
            STOP RUN.
-       PERFORM GET-RANDOM-INDEX.
-       DISPLAY SHOW-INDEX-WORD.
        PERFORM GET-RANDOM-WORD.
        DISPLAY SHOW-WORD.
+       PERFORM INIT-WORD-RES.
+       PERFORM ASK-INPUT.
+       PERFORM CHECK-FOR-WIN
+       DISPLAY SHOW-RES-WORD.
        STOP RUN.
 
        COUNT-WORD.
@@ -51,14 +70,14 @@
                ADD 1 TO NB-WORDS
                PERFORM READ-WORD
            END-PERFORM.
-           ADD -1 TO NB-WORDS.
+           ADD -2 TO NB-WORDS.
            CLOSE FILE-WORDS.
 
        READ-WORD.
            READ FILE-WORDS
              AT END SET END-OF-FILE TO TRUE
            END-READ.
-           MOVE MOT TO CURRENT-WORD.
+           MOVE MOT TO CURR-WORD.
 
        GET-RANDOM-WORD.
            PERFORM GET-RANDOM-INDEX.
@@ -76,3 +95,30 @@
            DIVIDE WORD-INDEX BY NB-WORDS GIVING WORD-INDEX
            REMAINDER WORD-INDEX.
            ADD 1 TO WORD-INDEX.
+
+       ASK-INPUT.
+           DISPLAY ASK-LETTER-OR-WORD.
+           ACCEPT INPUT-ENTERED.
+           initialize I.
+       PERFORM UNTIL CURR-WORD(I:1) = ";"
+           IF CURR-WORD(I:1) = INPUT-VALUE THEN
+               STRING INPUT-VALUE DELIMITED BY SIZE
+                      INTO WORD-RES(I:1)
+           END-IF
+           DISPLAY SHOW-CHAR-ENTERED
+           ADD 1 TO I
+       END-PERFORM.
+
+       INIT-WORD-RES.
+           PERFORM UNTIL CURR-WORD(I:1) = ";"
+               MOVE "_" TO WORD-RES(I:1)
+               ADD 1 TO I
+           END-PERFORM.
+
+       CHECK-FOR-WIN.
+           MOVE "Y" TO IS-WON.
+           PERFORM UNTIL WORD-RES(I:1) = ";"
+               IF WORD-RES(I:1) = "_" THEN
+                   MOVE "N" TO IS-WON
+               END-IF
+           END-PERFORM.
