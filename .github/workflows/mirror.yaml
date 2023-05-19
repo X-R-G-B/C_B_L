@@ -3,7 +3,7 @@ name: Publish
 on: push
 
 env:
-  MIRROR_URL: {{ secrets.MIRROR_URL }}
+  MIRROR_URL: ${{ secrets.MIRROR_URL }}
 
 jobs:
   publish:
