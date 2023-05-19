@@ -21,7 +21,8 @@
        77 WORD-INDEX PIC 9(3).
        77 IS-WON PIC X(1).
        77 INPUT-VALUE PIC a(1).
-       01 I PIC 9 VALUE 1.
+       77 I PIC 9 VALUE 1.
+       77 IS-LETTER-FOUND PIC X(1).
 
 
        SCREEN SECTION.
@@ -49,20 +50,32 @@
            02 LINE 6 COL 1 VALUE "Lettre: ".
            02 LINE 6 COL 9 PIC a(1) FROM INPUT-VALUE.
 
+       01 SHOW-LETTER-FOUND.
+           02 LINE 1 COL 1 VALUE "✅ Lettre trouvee ! => ".
+           02 LINE 1 COL 25 PIC X(1) FROM INPUT-VALUE.
+
+       01 SHOW-LETTER-NOT-FOUND.
+           02 LINE 1 COL 1 VALUE
+               "❌ LA LETTRE N'EST PAS PRESENTES DANS LE MOT".
+
        PROCEDURE DIVISION.
        MOVE "N" TO IS-WON.
        PERFORM COUNT-WORD.
-       DISPLAY SHOW-NB-WORD.
        IF NB-WORDS = 0
            STOP RUN.
        PERFORM GET-RANDOM-WORD.
-       DISPLAY SHOW-WORD.
        PERFORM INIT-WORD-RES.
        PERFORM UNTIL IS-WON = "Y"
            PERFORM ASK-INPUT
            DISPLAY SHOW-RES-WORD
+           IF IS-LETTER-FOUND = "Y" THEN
+               DISPLAY SHOW-LETTER-FOUND
+           ELSE
+               DISPLAY SHOW-LETTER-NOT-FOUND
+           END-IF
            PERFORM CHECK-FOR-WIN
        END-PERFORM.
+       DISPLAY SHOW-WORD.
        STOP RUN.
 
        COUNT-WORD.
@@ -101,11 +114,13 @@
        ASK-INPUT.
            DISPLAY ASK-LETTER-OR-WORD.
            ACCEPT INPUT-ENTERED.
+           MOVE "N" TO IS-LETTER-FOUND.
            initialize I.
        PERFORM UNTIL CURR-WORD(I:1) = ";"
            IF CURR-WORD(I:1) = INPUT-VALUE THEN
                STRING INPUT-VALUE DELIMITED BY SIZE
                       INTO WORD-RES(I:1)
+               MOVE "Y" TO IS-LETTER-FOUND
            END-IF
            DISPLAY SHOW-CHAR-ENTERED
            ADD 1 TO I
@@ -126,4 +141,3 @@
                END-IF
                ADD 1 TO I
            END-PERFORM.
-           DISPLAY IS-WON.
