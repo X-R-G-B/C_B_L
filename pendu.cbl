@@ -21,10 +21,13 @@
        77 WORD-INDEX PIC 9(3).
        77 STATE-WON PIC X(1).
        88 IS-WON VALUE "Y".
+       77 STATE-LOSE PIC X(1).
+       88 IS-LOSE VALUE "Y".
        77 INPUT-VALUE PIC a(1).
        77 I PIC 9 VALUE 1.
        77 STATE-LETTER-FOUND PIC X(1).
        88 IS-LETTER-FOUND VALUE "Y".
+       77 NB-LIFE PIC 9(2).
 
 
        SCREEN SECTION.
@@ -60,24 +63,43 @@
            02 LINE 1 COL 1 VALUE
                "❌ LA LETTRE N'EST PAS PRESENTES DANS LE MOT".
 
+       01 END-WINNER.
+           02 LINE 1 COL 1 VALUE "✅ Vous avez gagné !".
+
+       01 END-LOSER.
+           02 LINE 1 COL 1 VALUE "❌ Vous avez perdu !".
+
+       01 END-UNKNOW.
+           02 LINE 1 COL 1 VALUE "❌ Une erreur s'est produite".
+
        PROCEDURE DIVISION.
        MOVE "N" TO STATE-WON.
+       MOVE "N" TO STATE-LOSE.
+       MOVE 11 TO NB-LIFE.
        PERFORM COUNT-WORD.
        IF NB-WORDS = 0
            STOP RUN.
        PERFORM GET-RANDOM-WORD.
        PERFORM INIT-WORD-RES.
-       PERFORM UNTIL IS-WON
+       PERFORM UNTIL IS-WON OR IS-LOSE
            PERFORM ASK-INPUT
            DISPLAY SHOW-RES-WORD
            IF IS-LETTER-FOUND THEN
                DISPLAY SHOW-LETTER-FOUND
            ELSE
                DISPLAY SHOW-LETTER-NOT-FOUND
+               ADD -1 TO NB-LIFE
            END-IF
            PERFORM CHECK-FOR-WIN
        END-PERFORM.
        DISPLAY SHOW-WORD.
+       IF IS-WON THEN
+           DISPLAY END-WINNER
+       ELSE IF IS-LOSE THEN
+           DISPLAY END-LOSER
+       ELSE
+           DISPLAY END-UNKNOW
+       END-IF
        STOP RUN.
 
        COUNT-WORD.
@@ -137,6 +159,9 @@
        CHECK-FOR-WIN.
            MOVE "Y" TO STATE-WON.
            INITIALIZE I.
+           IF NB-LIFE = 0 THEN
+               MOVE "Y" TO STATE-LOSE
+           END-IF
            PERFORM UNTIL CURR-WORD(I:1) = ";"
                IF WORD-RES(I:1) = "_" THEN
                    MOVE "N" TO STATE-WON
