@@ -137,12 +137,6 @@
            ADD -2 TO NB-WORDS.
            CLOSE FILE-WORDS.
 
-       READ-WORD.
-           READ FILE-WORDS
-             AT END SET END-OF-FILE TO TRUE
-           END-READ.
-           MOVE MOT TO CURR-WORD.
-
        GET-RANDOM-WORD.
            PERFORM GET-RANDOM-INDEX.
            OPEN INPUT FILE-WORDS
@@ -151,6 +145,12 @@
                COMPUTE WORD-INDEX = WORD-INDEX - 1
            END-PERFORM.
            CLOSE FILE-WORDS.
+
+       READ-WORD.
+           READ FILE-WORDS
+             AT END SET END-OF-FILE TO TRUE
+           END-READ.
+           MOVE MOT TO CURR-WORD.
 
        GET-RANDOM-INDEX.
            COMPUTE WORD-INDEX =
