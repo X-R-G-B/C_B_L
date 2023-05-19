@@ -96,35 +96,35 @@
                FOREGROUND-COLOR RED.
 
        PROCEDURE DIVISION.
-       MOVE "N" TO STATE-WON.
-       MOVE "N" TO STATE-LOSE.
-       MOVE 11 TO NB-LIFE.
-       PERFORM COUNT-WORD.
-       IF NB-WORDS = 0
-           STOP RUN.
-       PERFORM GET-RANDOM-WORD.
-       PERFORM INIT-WORD-RES.
-       PERFORM UNTIL IS-WON OR IS-LOSE
-           PERFORM ASK-INPUT
-           DISPLAY SHOW-RES-WORD
-           DISPLAY SHOW-NB-LIFE
-           IF IS-LETTER-FOUND THEN
-               DISPLAY SHOW-LETTER-FOUND
-           ELSE
-               DISPLAY SHOW-LETTER-NOT-FOUND
-               ADD -1 TO NB-LIFE
+           MOVE "N" TO STATE-WON.
+           MOVE "N" TO STATE-LOSE.
+           MOVE 11 TO NB-LIFE.
+           PERFORM COUNT-WORD.
+           IF NB-WORDS = 0 THEN
+               STOP RUN
            END-IF
-           PERFORM CHECK-FOR-WIN
-       END-PERFORM.
-       DISPLAY SHOW-WORD.
-       DISPLAY SHOW-NB-LIFE.
-       IF IS-WON THEN
-           DISPLAY SHOW-END-WINNER
-       ELSE IF IS-LOSE THEN
-           DISPLAY SHOW-END-LOSER
-       ELSE
-           DISPLAY SHOW-END-UNKNOW
-       END-IF
+           PERFORM GET-RANDOM-WORD.
+           PERFORM INIT-WORD-RES.
+           PERFORM UNTIL IS-WON OR IS-LOSE
+               PERFORM ASK-INPUT
+               DISPLAY SHOW-RES-WORD
+               DISPLAY SHOW-NB-LIFE
+               IF IS-LETTER-FOUND THEN
+                   DISPLAY SHOW-LETTER-FOUND
+               ELSE
+                   DISPLAY SHOW-LETTER-NOT-FOUND
+                   ADD -1 TO NB-LIFE
+               END-IF
+               PERFORM CHECK-FOR-WIN
+           END-PERFORM.
+           DISPLAY SHOW-WORD.
+           DISPLAY SHOW-NB-LIFE.
+           IF IS-WON THEN
+               DISPLAY SHOW-END-WINNER
+           END-IF
+           IF IS-LOSE THEN
+               DISPLAY SHOW-END-LOSER
+           END-IF
        STOP RUN.
 
        COUNT-WORD.
@@ -139,7 +139,7 @@
 
        GET-RANDOM-WORD.
            PERFORM GET-RANDOM-INDEX.
-           OPEN INPUT FILE-WORDS
+           OPEN INPUT FILE-WORDS.
            PERFORM UNTIL WORD-INDEX = 0
                PERFORM READ-WORD
                COMPUTE WORD-INDEX = WORD-INDEX - 1
