@@ -19,10 +19,12 @@
        77 WORD-RES PIC X(30).
        77 NB-WORDS PIC 9(3).
        77 WORD-INDEX PIC 9(3).
-       77 IS-WON PIC X(1).
+       77 STATE-WON PIC X(1).
+       88 IS-WON VALUE "Y".
        77 INPUT-VALUE PIC a(1).
        77 I PIC 9 VALUE 1.
-       77 IS-LETTER-FOUND PIC X(1).
+       77 STATE-LETTER-FOUND PIC X(1).
+       88 IS-LETTER-FOUND VALUE "Y".
 
 
        SCREEN SECTION.
@@ -59,16 +61,16 @@
                "❌ LA LETTRE N'EST PAS PRESENTES DANS LE MOT".
 
        PROCEDURE DIVISION.
-       MOVE "N" TO IS-WON.
+       MOVE "N" TO STATE-WON.
        PERFORM COUNT-WORD.
        IF NB-WORDS = 0
            STOP RUN.
        PERFORM GET-RANDOM-WORD.
        PERFORM INIT-WORD-RES.
-       PERFORM UNTIL IS-WON = "Y"
+       PERFORM UNTIL IS-WON
            PERFORM ASK-INPUT
            DISPLAY SHOW-RES-WORD
-           IF IS-LETTER-FOUND = "Y" THEN
+           IF IS-LETTER-FOUND THEN
                DISPLAY SHOW-LETTER-FOUND
            ELSE
                DISPLAY SHOW-LETTER-NOT-FOUND
@@ -114,13 +116,13 @@
        ASK-INPUT.
            DISPLAY ASK-LETTER-OR-WORD.
            ACCEPT INPUT-ENTERED.
-           MOVE "N" TO IS-LETTER-FOUND.
+           MOVE "N" TO STATE-LETTER-FOUND.
            initialize I.
        PERFORM UNTIL CURR-WORD(I:1) = ";"
            IF CURR-WORD(I:1) = INPUT-VALUE THEN
                STRING INPUT-VALUE DELIMITED BY SIZE
                       INTO WORD-RES(I:1)
-               MOVE "Y" TO IS-LETTER-FOUND
+               MOVE "Y" TO STATE-LETTER-FOUND
            END-IF
            DISPLAY SHOW-CHAR-ENTERED
            ADD 1 TO I
@@ -133,11 +135,11 @@
            END-PERFORM.
 
        CHECK-FOR-WIN.
-           MOVE "Y" TO IS-WON.
+           MOVE "Y" TO STATE-WON.
            INITIALIZE I.
            PERFORM UNTIL CURR-WORD(I:1) = ";"
                IF WORD-RES(I:1) = "_" THEN
-                   MOVE "N" TO IS-WON
+                   MOVE "N" TO STATE-WON
                END-IF
                ADD 1 TO I
            END-PERFORM.
