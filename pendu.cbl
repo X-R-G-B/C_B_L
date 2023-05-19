@@ -58,9 +58,11 @@
        PERFORM GET-RANDOM-WORD.
        DISPLAY SHOW-WORD.
        PERFORM INIT-WORD-RES.
-       PERFORM ASK-INPUT.
-       PERFORM CHECK-FOR-WIN
-       DISPLAY SHOW-RES-WORD.
+       PERFORM UNTIL IS-WON = "Y"
+           PERFORM ASK-INPUT
+           DISPLAY SHOW-RES-WORD
+           PERFORM CHECK-FOR-WIN
+       END-PERFORM.
        STOP RUN.
 
        COUNT-WORD.
@@ -117,8 +119,11 @@
 
        CHECK-FOR-WIN.
            MOVE "Y" TO IS-WON.
-           PERFORM UNTIL WORD-RES(I:1) = ";"
+           INITIALIZE I.
+           PERFORM UNTIL CURR-WORD(I:1) = ";"
                IF WORD-RES(I:1) = "_" THEN
                    MOVE "N" TO IS-WON
                END-IF
+               ADD 1 TO I
            END-PERFORM.
+           DISPLAY IS-WON.
