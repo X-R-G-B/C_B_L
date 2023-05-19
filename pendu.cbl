@@ -19,7 +19,8 @@
        77 WORD-RES PIC X(30).
        77 NB-WORDS PIC 9(3).
        77 WORD-INDEX PIC 9(3).
-       77 IS-WON PIC X(1).
+       77 STATE-WON PIC X(1).
+       88 IS-WON VALUE "Y".
        77 INPUT-VALUE PIC a(1).
        01 I PIC 9 VALUE 1.
 
@@ -50,7 +51,7 @@
            02 LINE 6 COL 9 PIC a(1) FROM INPUT-VALUE.
 
        PROCEDURE DIVISION.
-       MOVE "N" TO IS-WON.
+       MOVE "N" TO STATE-WON.
        PERFORM COUNT-WORD.
        DISPLAY SHOW-NB-WORD.
        IF NB-WORDS = 0
@@ -58,7 +59,7 @@
        PERFORM GET-RANDOM-WORD.
        DISPLAY SHOW-WORD.
        PERFORM INIT-WORD-RES.
-       PERFORM UNTIL IS-WON = "Y"
+       PERFORM UNTIL IS-WON
            PERFORM ASK-INPUT
            DISPLAY SHOW-RES-WORD
            PERFORM CHECK-FOR-WIN
@@ -118,12 +119,12 @@
            END-PERFORM.
 
        CHECK-FOR-WIN.
-           MOVE "Y" TO IS-WON.
+           MOVE "Y" TO STATE-WON.
            INITIALIZE I.
            PERFORM UNTIL CURR-WORD(I:1) = ";"
                IF WORD-RES(I:1) = "_" THEN
-                   MOVE "N" TO IS-WON
+                   MOVE "N" TO STATE-WON
                END-IF
                ADD 1 TO I
            END-PERFORM.
-           DISPLAY IS-WON.
+           DISPLAY STATE-WON.
