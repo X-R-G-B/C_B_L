@@ -28,6 +28,16 @@
        77 STATE-LETTER-FOUND PIC X(1).
        88 IS-LETTER-FOUND VALUE "Y".
        77 NB-LIFE PIC 9(2).
+      * COLORS FOR FOREGROUND AND BACKGROUND
+       78 BLACK VALUE 0.
+       78 BLUE VALUE 1.
+       78 GREEN VALUE 2.
+       78 CYAN VALUE 3.
+       78 RED VALUE 4.
+      * COLORS FOR THE FOREGROUND ONLY
+       78 BRIGHT-MAGENTA VALUE 13.
+       78 BRIGHT-BROWN VALUE 14.
+       78 BRIGHT-WHITE VALUE 15.
 
 
        SCREEN SECTION.
@@ -44,33 +54,46 @@
            02 LINE 3 COL 8 PIC 9(3) FROM WORD-INDEX.
 
        01 ASK-LETTER-OR-WORD.
-           02 LINE 10 COL 1 VALUE "Entrez un mot: ".
-           02 INPUT-ENTERED PIC a(1) TO INPUT-VALUE REQUIRED.
+           02 LINE 10 COL 1 VALUE "Entrez une lettre: ".
+           02 INPUT-ENTERED PIC a(1) TO INPUT-VALUE REQUIRED
+                BACKGROUND-COLOR BRIGHT-WHITE
+                FOREGROUND-COLOR BRIGHT-BROWN.
 
        01 SHOW-RES-WORD.
            02 BLANK SCREEN.
            02 LINE 5 COL 1 VALUE "Mot: ".
            02 LINE 5 COL 6 PIC X(30) FROM WORD-RES.
+
        01 SHOW-CHAR-ENTERED.
            02 LINE 6 COL 1 VALUE "Lettre: ".
            02 LINE 6 COL 9 PIC a(1) FROM INPUT-VALUE.
 
        01 SHOW-LETTER-FOUND.
-           02 LINE 1 COL 1 VALUE "✅ Lettre trouvee ! => ".
-           02 LINE 1 COL 25 PIC X(1) FROM INPUT-VALUE.
+           02 LINE 1 COL 1 VALUE "✅ Lettre trouvee ! => "
+               FOREGROUND-COLOR GREEN.
+           02 LINE 1 COL 25 PIC X(1) FROM INPUT-VALUE
+               BACKGROUND-COLOR GREEN.
 
        01 SHOW-LETTER-NOT-FOUND.
            02 LINE 1 COL 1 VALUE
-               "❌ LA LETTRE N'EST PAS PRESENTES DANS LE MOT".
+               "❌ LA LETTRE N'EST PAS PRESENTES DANS LE MOT"
+               FOREGROUND-COLOR RED.
 
-       01 END-WINNER.
-           02 LINE 1 COL 1 VALUE "✅ Vous avez gagné !".
+       01 SHOW-NB-LIFE.
+           02 LINE 2 COL 1 VALUE "Nombre de vie restantes: ".
+           02 LINE 2 COL 26 PIC 9(2) FROM NB-LIFE.
 
-       01 END-LOSER.
-           02 LINE 1 COL 1 VALUE "❌ Vous avez perdu !".
+       01 SHOW-END-WINNER.
+           02 LINE 1 COL 1 VALUE "✅ Vous avez gagne !"
+               FOREGROUND-COLOR GREEN.
 
-       01 END-UNKNOW.
-           02 LINE 1 COL 1 VALUE "❌ Une erreur s'est produite".
+       01 SHOW-END-LOSER.
+           02 LINE 1 COL 1 VALUE "❌ Vous avez perdu !"
+               FOREGROUND-COLOR RED.
+
+       01 SHOW-END-UNKNOW.
+           02 LINE 1 COL 1 VALUE "❌ Une erreur s'est produite"
+               FOREGROUND-COLOR RED.
 
        PROCEDURE DIVISION.
        MOVE "N" TO STATE-WON.
@@ -84,6 +107,7 @@
        PERFORM UNTIL IS-WON OR IS-LOSE
            PERFORM ASK-INPUT
            DISPLAY SHOW-RES-WORD
+           DISPLAY SHOW-NB-LIFE
            IF IS-LETTER-FOUND THEN
                DISPLAY SHOW-LETTER-FOUND
            ELSE
@@ -93,12 +117,13 @@
            PERFORM CHECK-FOR-WIN
        END-PERFORM.
        DISPLAY SHOW-WORD.
+       DISPLAY SHOW-NB-LIFE.
        IF IS-WON THEN
-           DISPLAY END-WINNER
+           DISPLAY SHOW-END-WINNER
        ELSE IF IS-LOSE THEN
-           DISPLAY END-LOSER
+           DISPLAY SHOW-END-LOSER
        ELSE
-           DISPLAY END-UNKNOW
+           DISPLAY SHOW-END-UNKNOW
        END-IF
        STOP RUN.
 
