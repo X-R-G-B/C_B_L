@@ -165,15 +165,15 @@
            ACCEPT INPUT-ENTERED.
            MOVE "N" TO STATE-LETTER-FOUND.
            initialize I.
-       PERFORM UNTIL CURR-WORD(I:1) = ";"
-           IF CURR-WORD(I:1) = INPUT-VALUE THEN
-               STRING INPUT-VALUE DELIMITED BY SIZE
-                      INTO WORD-RES(I:1)
-               MOVE "Y" TO STATE-LETTER-FOUND
-           END-IF
-           DISPLAY SHOW-CHAR-ENTERED
-           ADD 1 TO I
-       END-PERFORM.
+           PERFORM UNTIL CURR-WORD(I:1) = ";"
+               IF CURR-WORD(I:1) = INPUT-VALUE THEN
+                   STRING INPUT-VALUE DELIMITED BY SIZE
+                          INTO WORD-RES(I:1)
+                   MOVE "Y" TO STATE-LETTER-FOUND
+               END-IF
+               DISPLAY SHOW-CHAR-ENTERED
+               ADD 1 TO I
+           END-PERFORM.
 
        INIT-WORD-RES.
            PERFORM UNTIL CURR-WORD(I:1) = ";"
