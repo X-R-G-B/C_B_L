@@ -22,3 +22,5 @@ clean:
 
 fclean: clean
 	$(RM) $(TARGET)
+
+re: fclean all

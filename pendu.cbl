@@ -110,13 +110,13 @@
            IF NB-WORDS = 0 THEN
                STOP RUN
            END-IF
-           MOVE SHOW-STATE(NB-LIFE) TO NB-LIFE.
            PERFORM GET-RANDOM-WORD.
            PERFORM INIT-WORD-RES.
            PERFORM UNTIL IS-WON OR IS-LOSE
                PERFORM ASK-INPUT
                DISPLAY SHOW-RES-WORD
                DISPLAY SHOW-NB-LIFE
+               MOVE SHOW-STATE(NB-LIFE) TO NB-LIFE
                IF IS-LETTER-FOUND THEN
                    DISPLAY SHOW-LETTER-FOUND
                ELSE
@@ -127,6 +127,7 @@
            END-PERFORM.
            DISPLAY SHOW-WORD.
            DISPLAY SHOW-NB-LIFE.
+           MOVE SHOW-STATE(NB-LIFE) TO NB-LIFE.
            IF IS-WON THEN
                DISPLAY SHOW-END-WINNER
            END-IF
