@@ -1,6 +1,6 @@
 pendu
-ListeDeMots
-pendu.c
-pendu.c.h
-pendu.c.l.h
-pendu.i
+*.c
+*.c.h
+*.c.l.h
+*.i
+*.so

@@ -1,7 +1,14 @@
        IDENTIFICATION DIVISION.
        PROGRAM-ID. pendu.
 
+
        ENVIRONMENT DIVISION.
+
+       CONFIGURATION SECTION.
+
+       REPOSITORY.
+           FUNCTION SHOW-STATE.
+
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
            SELECT FILE-WORDS ASSIGN TO 'assets/word_list.txt'
@@ -103,6 +110,7 @@
            IF NB-WORDS = 0 THEN
                STOP RUN
            END-IF
+           MOVE SHOW-STATE(NB-LIFE) TO NB-LIFE.
            PERFORM GET-RANDOM-WORD.
            PERFORM INIT-WORD-RES.
            PERFORM UNTIL IS-WON OR IS-LOSE
