@@ -1,5 +1,25 @@
 # C_B_L
 
+## Usage
+
 ```bash
-cobc -Oxj pendu.cbl
+./pendu
+```
+
+## Build
+
+```bash
+make
+```
+
+## Clean
+
+```bash
+make clean
+```
+
+## Fclean
+
+```bash
+make fclean
 ```
