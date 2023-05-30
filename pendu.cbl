@@ -31,10 +31,12 @@
        77 STATE-LOSE PIC X(1).
        88 IS-LOSE VALUE "Y".
        77 INPUT-VALUE PIC a(1).
-       77 I PIC 9 VALUE 1.
+       77 I PIC 9(3) VALUE 1.
        77 STATE-LETTER-FOUND PIC X(1).
        88 IS-LETTER-FOUND VALUE "Y".
        77 NB-LIFE PIC 9(2).
+       77 LETTERS-LIST PIC X(26) VALUE "abcdefghijklmnopqrstuvwxyz".
+       77 TMP-LETTERS-LIST PIC X(26).
       * COLORS FOR FOREGROUND AND BACKGROUND
        78 BLACK VALUE 0.
        78 BLUE VALUE 1.
@@ -86,6 +88,10 @@
                "❌ LA LETTRE N'EST PAS PRESENTES DANS LE MOT"
                FOREGROUND-COLOR RED.
 
+       01 SHOW-LETTERS-LIST.
+           02 LINE 4 COL 1 VALUE "Lettres restantes: ".
+           02 LINE 4 COL 20 PIC X(26) FROM LETTERS-LIST.
+
        01 SHOW-NB-LIFE.
            02 LINE 2 COL 1 VALUE "Nombre de vie restantes: ".
            02 LINE 2 COL 26 PIC 9(2) FROM NB-LIFE.
@@ -124,6 +130,8 @@
                    ADD -1 TO NB-LIFE
                END-IF
                PERFORM CHECK-FOR-WIN
+               PERFORM SET-LETTERS-LIST
+               DISPLAY SHOW-LETTERS-LIST
            END-PERFORM.
            DISPLAY SHOW-WORD.
            DISPLAY SHOW-NB-LIFE.
@@ -202,3 +210,16 @@
                END-IF
                ADD 1 TO I
            END-PERFORM.
+
+       SET-LETTERS-LIST.
+           INITIALIZE I.
+           INITIALIZE TMP-LETTERS-LIST.
+           PERFORM VARYING I FROM 1 BY 1 UNTIL I > 26
+               IF INPUT-VALUE = LETTERS-LIST(I:1) THEN
+                   MOVE "_" TO TMP-LETTERS-LIST(I:1)
+               ELSE
+                   MOVE LETTERS-LIST(I:1) TO TMP-LETTERS-LIST(I:1)
+               END-IF
+               DISPLAY I
+           END-PERFORM.
+           MOVE TMP-LETTERS-LIST TO LETTERS-LIST.
